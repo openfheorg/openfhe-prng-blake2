@@ -39,7 +39,6 @@
 #include "prng.h"
 
 #include <array>
-#include <mutex>
 
 /**
  * @brief Defines the PRNG engine (based on BLAKE2) used by OpenFHE. It can be used
@@ -47,15 +46,6 @@
  */
 class Blake2Engine : public PRNG {
  public:
-  /**
-   * @brief Constructor using a small seed - used for generating a large seed
-   */
-  // TODO (dsuponit): do we need "explicit Blake2Engine(PRNG::result_type seed)"? Only used in UnitTestTransform.cpp:l.983?
-//   explicit Blake2Engine(PRNG::result_type seed)
-//       : PRNG(seed), m_counter(0), m_buffer({}), m_bufferIndex(0) {
-//     m_seed[0] = seed;
-//   }
-
   /**
    * @brief Main constructor taking a vector of MAX_SEED_GENS integers as a seed and a counter.
    *        If there is no value for the counter, then pass zero as the counter value
@@ -85,15 +75,6 @@ class Blake2Engine : public PRNG {
   Blake2Engine(const Blake2Engine& other)
     : PRNG(other), m_buffer(other.m_buffer), m_bufferIndex(other.m_bufferIndex) {}
 
-  // TODO (dsuponit): do we need "operator=" which returns void instead of Blake2Engine& (*this)?
-  // TODO (dsuponit): do we need it at all?
-//   void operator=(const Blake2Engine& other) {
-//       m_counter = other.m_counter;
-//       m_seed = other.m_seed;
-//       m_buffer = other.m_buffer;
-//       m_bufferIndex = other.m_bufferIndex;
-//   }
-
  private:
     /**
      * @brief The main call to blake2xb function
@@ -105,8 +86,6 @@ class Blake2Engine : public PRNG {
 
     // Index in m_buffer corresponding to the current PRNG sample
     uint16_t m_bufferIndex = 0;
-
-    std::mutex mtx;
 };
 
 /**
@@ -115,10 +94,8 @@ class Blake2Engine : public PRNG {
  * @attention the caller is responsible for freeing the memory allocated by this function 
  **/
 extern "C" {
-    Blake2Engine* createEngineInstance(const std::array<PRNG::result_type, PRNG::MAX_SEED_GENS>& seed,
-                                       PRNG::result_type counter) {
-      return new Blake2Engine(seed, counter);
-    }
+    PRNG* createEngineInstance(const std::array<PRNG::result_type, PRNG::MAX_SEED_GENS>& seed,
+                               PRNG::result_type counter);
 }
 
 #endif

@@ -28,8 +28,22 @@
 // OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //==================================================================================
+
 /**
- * Abstract base class for any PRNG engine
+ * DISCLAIMER: IMPORTANT NOTICE ABOUT FILE MODIFICATIONS
+ * 
+ * This file is used in OpenFHE and ANY PRNG (pseudorandom number generator) OpenFHE uses. 
+ * The file is critical to the functionality of the library.
+ * 
+ * Modifications should only be performed by authorized personnel who understand the potential impacts.
+ * Unauthorized changes may lead to library failure.
+ * 
+ * By proceeding with changes to this file, you acknowledge that you understand the risks involved and
+ * accept full responsibility for any resulting issues.
+ */
+
+/**
+ * Abstract base class for any PRNG engine.
  */
 
 #ifndef __PRNG_H__
@@ -42,19 +56,30 @@
 
 class PRNG {
 public:
+    // ATTENTION (VERY IMPORTANT):
+    // 1. any PRNG library will be assigned the name specified in the string PRNGLibName, as
+    //    the code opening this library will search for it by that name only.
+    // 2. for any engine class derived from the PRNG class there must be implemented a C function
+    //    generating a dynamically allocated engine object of that derived class. The name of
+    //    the C function is specified by engineFuncName.
+    // ========== NEVER(!) CHANGE the values of PRNGLibName and engineFuncName ==========
+    // the C++ code will construct the full library name out of PRNGLibName ("libPRNGengine.so")
+    constexpr static const char* PRNGLibName = "PRNGengine";
+    constexpr static const char* engineFuncName = "createEngineInstance";
+    // ========== NEVER(!) CHANGE the values of PRNGLibName and engineFuncName ==========
+
     enum {
       MAX_SEED_GENS = 16,
       // the buffer stores 1024 samples of 32-bit integers
       PRNG_BUFFER_SIZE = 1024
     };
 
-    // all C++11 distributions used in OpenFHE work by default with uint32_t
-    // a different data type can be specified if needed for a particular
-    // architecture
+    // all C++11 distributions used in OpenFHE work with uint32_t by default.
+    // a different data type can be specified if needed for a particular architecture
     using result_type = uint32_t;
 
     /**
-     * @brief minimum value used by C+11 distribution generators when no lower
+     * @brief minimum value used by C++11 distribution generators when no lower
      * bound is explicitly specified by the user
      */
     static constexpr result_type min() {
@@ -62,7 +87,7 @@ public:
     }
 
     /**
-     * @brief maximum value used by C+11 distribution generators when no upper
+     * @brief maximum value used by C++11 distribution generators when no upper
      * bound is explicitly specified by the user
      */
     static constexpr result_type max() {
@@ -89,8 +114,6 @@ protected:
 
     // the seed for the hash function
     std::array<PRNG::result_type, PRNG::MAX_SEED_GENS> m_seed{};
-
-
 };
 #endif // __PRNG_H__
 

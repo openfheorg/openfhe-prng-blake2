@@ -32,16 +32,18 @@
 #include "blake2.h"
 
 #include <stdexcept>
-// #include <iostream> // TODO (dsuponit): delete after testing
 
 void Blake2Engine::Generate() {
-    const std::lock_guard<std::mutex> lock(mtx);
     // m_counter is the input to the hash function
     // m_buffer is the output
-    // std::cerr << "========= in Blake2Engine::Generate()" << std::endl; // TODO (dsuponit): delete after testing
     if (blake2xb(m_buffer.begin(), m_buffer.size() * sizeof(PRNG::result_type), &m_counter, sizeof(m_counter),
                  m_seed.cbegin(), m_seed.size() * sizeof(PRNG::result_type)) != 0) {
         throw std::runtime_error("PRNG: blake2xb failed");
     }
     m_counter++;
+}
+
+PRNG* createEngineInstance(const std::array<PRNG::result_type, PRNG::MAX_SEED_GENS>& seed,
+                           PRNG::result_type counter) {
+    return new Blake2Engine(seed, counter);
 }

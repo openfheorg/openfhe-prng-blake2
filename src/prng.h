@@ -57,16 +57,16 @@
 class PRNG {
 public:
     // ATTENTION (VERY IMPORTANT):
-    // 1. any PRNG library will be assigned the name specified in the string PRNGLibName, as
+    // 1. any PRNG library will be assigned the name specified in the string ExternPRNGLibName, as
     //    the code opening this library will search for it by that name only.
     // 2. for any engine class derived from the PRNG class there must be implemented a C function
     //    generating a dynamically allocated engine object of that derived class. The name of
     //    the C function is specified by engineFuncName.
-    // ========== NEVER(!) CHANGE the values of PRNGLibName and engineFuncName ==========
-    // the C++ code will construct the full library name out of PRNGLibName ("libPRNGengine.so")
-    constexpr static const char* PRNGLibName = "PRNGengine";
+    // ========== NEVER(!) CHANGE the values of ExternPRNGLibName and engineFuncName ==========
+    // the C++ code will construct the full library name out of ExternPRNGLibName ("libPRNGengine.so")
+    constexpr static const char* ExternPRNGLibName = "PRNGengine";
     constexpr static const char* engineFuncName = "createEngineInstance";
-    // ========== NEVER(!) CHANGE the values of PRNGLibName and engineFuncName ==========
+    // ========== NEVER(!) CHANGE the values of ExternPRNGLibName and engineFuncName ==========
 
     enum {
       MAX_SEED_GENS = 16,

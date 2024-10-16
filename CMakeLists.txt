@@ -8,7 +8,6 @@ project(${LIBRARY_NAME} VERSION 1.0)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-# TODO (dsuponit): are we going to ever build this library as static? most likely not...
 option(BUILD_SHARED_LIBS "Build shared library" ON)
 message( STATUS "BUILD_SHARED_LIBS: ${BUILD_SHARED_LIBS}")
 message("***** INSTALL IS AT ${CMAKE_INSTALL_PREFIX}; to change, run cmake with -DCMAKE_INSTALL_PREFIX=/your/path")

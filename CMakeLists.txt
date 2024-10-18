@@ -5,8 +5,13 @@ set(LIBRARY_NAME "PRNGengine")
 project(${LIBRARY_NAME} VERSION 1.0)
 
 # Set the C++ standard
-set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_CXX_STANDARD_REQUIRED True)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+if(NOT UNIX OR NOT "${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+    # OpenFHE may use an external shared object provided by user for PRNG and linked with g++ on Linux.
+    message(FATAL_ERROR "This library must be linked using g++ on Linux only")
+endif()
 
 option(BUILD_SHARED_LIBS "Build shared library" ON)
 message( STATUS "BUILD_SHARED_LIBS: ${BUILD_SHARED_LIBS}")

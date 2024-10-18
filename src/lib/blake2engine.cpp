@@ -43,7 +43,6 @@ void Blake2Engine::Generate() {
     m_counter++;
 }
 
-PRNG* createEngineInstance(const std::array<PRNG::result_type, PRNG::MAX_SEED_GENS>& seed,
-                           PRNG::result_type counter) {
+PRNG* createEngineInstance(const PRNG::seed_array_t& seed, uint64_t counter) {
     return new Blake2Engine(seed, counter);
 }

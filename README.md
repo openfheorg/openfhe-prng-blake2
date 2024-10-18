@@ -1,12 +1,12 @@
 External PRNG Engine (Blake2) for OpenFHE
 =====================================
 
-This is an example to help develop external PRNG engines as shared objects. It is an experimental feature which is currently available on Linux only and g++ is the only compiler to be used to link the shared object.
+This example demonstrates how to develop external PRNG engines as shared objects. It is an experimental feature currently available only on Linux, and g++ is the required compiler for linking the shared object.
 
-Below are the steps to follow in order to create a new PRNG:
+Below are the steps to follow to create a new PRNG:
 1. Create a repo (or directory) for your custom engine.
 2. Create a new class similar to [Blake2Engine](https://github.com/openfheorg/openfhe-prng-blake2/blob/main/src/include/blake2engine.h):
-    * copy [prng.h](https://github.com/openfheorg/openfhe-development/blob/main/src/core/include/utils/prng/prng.h) from OpenFHE to your repo. The class PRNG defined in prng.h must be used as the base class for the new class. Do not change prng.h.
+    * copy [prng.h](https://github.com/openfheorg/openfhe-development/blob/main/src/core/include/utils/prng/prng.h) from OpenFHE to your repo. The class PRNG defined in prng.h must be used as the base class for the new class. prng.h is not allowed to be changed.
     * only two public member functions are needed for the class: a constructor with 2 input parameters (seed array and counter) and operator()
     * create extern "C" function "createEngineInstance" returning a dynamically allocated object of the new class. As the function is called from OpenFHE using dlsym() you may not change its current name.
 3. Link your new engine library as a shared object. See [CMakeLists.txt](https://github.com/openfheorg/openfhe-prng-blake2/blob/main/CMakeLists.txt) as an example if you use cmake.
